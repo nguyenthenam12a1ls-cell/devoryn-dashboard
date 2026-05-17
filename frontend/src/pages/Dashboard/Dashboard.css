@@ -1,9 +1,10 @@
 .dashboard-page {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 24px;
   height: 100%;
   padding-right: 4px;
+  padding-bottom: 24px;
 }
 
 .card-link-btn {
@@ -38,8 +39,9 @@
 }
 
 .page-title {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
+  letter-spacing: -0.02em;
   color: #fff;
   margin: 0;
 }
@@ -66,16 +68,16 @@
 .dash-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
+  gap: 24px;
   flex: 1;
   min-height: 0;
 }
 
 .card {
-  padding: 14px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
   overflow: hidden;
 }
 
@@ -87,9 +89,10 @@
 }
 
 .card-title {
-  font-size: 12.5px;
-  font-weight: 600;
-  color: rgba(255,255,255,0.85);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: rgba(255,255,255,0.95);
 }
 
 .card-more {
@@ -139,15 +142,17 @@
 }
 
 .metric-val {
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 700;
+  letter-spacing: -0.02em;
   color: #fff;
 }
 
 .metric-lbl {
-  font-size: 10px;
-  color: var(--text-muted, rgba(255,255,255,0.4));
-  margin-top: 2px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted, rgba(255,255,255,0.5));
+  margin-top: 4px;
 }
 
 /* Projects card */
@@ -161,23 +166,24 @@
   gap: 8px;
 }
 
-.proj-name { font-size: 11.5px; color: rgba(255,255,255,0.8); width: 90px; flex-shrink: 0; }
+.proj-name { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.9); width: 90px; flex-shrink: 0; }
 
 .proj-bar-bg {
   flex: 1;
-  height: 5px;
+  height: 6px;
   background: rgba(255,255,255,0.08);
-  border-radius: 3px;
+  border-radius: 4px;
   overflow: hidden;
 }
 
 .proj-bar-fill {
   height: 100%;
-  border-radius: 3px;
+  border-radius: 4px;
   transition: width 0.5s ease;
+  box-shadow: 0 0 10px rgba(255,255,255,0.2);
 }
 
-.proj-pct { font-size: 11px; color: rgba(255,255,255,0.55); width: 30px; text-align: right; flex-shrink: 0; }
+.proj-pct { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.7); width: 35px; text-align: right; flex-shrink: 0; }
 
 .task-mini-row {
   display: flex;
@@ -230,7 +236,7 @@
 
 /* Team activity bar */
 .team-activity-bar {
-  padding: 12px 14px;
+  padding: 16px 24px;
   flex-shrink: 0;
 }
 
@@ -264,12 +270,13 @@
 .activity-item.active { background: rgba(0,229,255,0.08); border-color: rgba(0,229,255,0.35); }
 
 .act-avatar {
-  width: 30px; height: 30px;
+  width: 36px; height: 36px;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 700; color: #fff;
+  font-size: 14px; font-weight: 700; color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
-.act-body { display: flex; flex-direction: column; gap: 2px; }
-.act-user { font-size: 11.5px; font-weight: 700; color: rgba(255,255,255,0.9); }
-.act-action { font-size: 10px; color: rgba(255,255,255,0.5); line-height: 1.4; }
-.act-time { font-size: 9.5px; color: rgba(255,255,255,0.3); }
+.act-body { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+.act-user { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.95); }
+.act-action { font-size: 11px; color: rgba(255,255,255,0.6); line-height: 1.4; }
+.act-time { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 2px; }
