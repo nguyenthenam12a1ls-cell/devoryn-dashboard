@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import morgan from "morgan"
 import errorHandler from "./middlewares/errorHandler"
 import AppError from './utils/AppError';
+import UserRoutes from "./routes/userRoutes"
 dotenv.config();
 
 const app: Application = express();
@@ -14,6 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use(morgan('dev'));
+app.use('/api/user', UserRoutes);
 
 // Health check route
 app.get('/health', (req: Request, res: Response) => {
