@@ -6,4 +6,9 @@ const userValidator = z.object({
     password: z.string().min(6, "Mật khẩu phải từ 6 kí tự đổ lên"),
 });
 
-export default userValidator;
+const loginValidator = z.object({
+    email: z.string().email("Email không hợp lệ"),
+    password: z.string().min(6, "Mật khẩu phải từ 6 kí tự đổ lên")
+});
+
+export { userValidator, loginValidator };
