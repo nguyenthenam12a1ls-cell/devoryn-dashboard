@@ -1,5 +1,5 @@
 import express from "express";
-import { login, register } from "../controllers/userController";
+import { login, register , refresh, logout} from "../controllers/userController";
 import {Protected, restrictTo} from "../middlewares/authMiddleware";
 
 
@@ -15,6 +15,8 @@ router.get("/profile", Protected, (req, res) => {
         }
     });
 });
+router.post('/refresh', refresh);
+router.post('/logout', logout);
 router.get("/admin-only", Protected, restrictTo("admin"), (req, res) => {
     res.json({
         status: "success", 

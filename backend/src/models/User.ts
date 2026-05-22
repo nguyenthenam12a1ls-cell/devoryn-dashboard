@@ -24,6 +24,10 @@ const userSchema = new Schema({
         type: String,
         enum: Object.values(UserRole),
         default: UserRole.USER
+    },
+    refreshToken: {
+        type: String,
+        default: ""
     }
 });
 
