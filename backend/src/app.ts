@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorHandler"
 import AppError from './utils/AppError';
 import UserRoutes from "./routes/userRoutes"
+import ProjectRoutes from "./routes/projectRoutes";
 dotenv.config();
 
 const app: Application = express();
@@ -18,6 +19,7 @@ app.use(cookieParser());
 
 app.use(morgan('dev'));
 app.use('/api/user', UserRoutes);
+app.use('/api/project', ProjectRoutes);
 
 // Health check route
 app.get('/health', (req: Request, res: Response) => {
