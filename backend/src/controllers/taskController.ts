@@ -40,12 +40,43 @@ const getTasksByProject = async (req: Request, res: Response, next: NextFunction
         if (!hasAccess) {
             throw new AppError("Chỉ chủ sở hữu hoặc thành viên của dự án mới có thể tạo task", 403);
         }
+        
+        const page = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
 
-        const task = await taskModel.find({project: projectId});
+        const skip = (page - 1) * limit;
+
+        const queryObj: any = {project: projectId};
+
+        if(req.query.status) {
+            queryObj.status = req.query.status;
+        }
+
+        if(req.query.priority) {
+            queryObj.priority = req.query.priority;
+        }
+
+        let sortObj: any = {createdAt: -1};
+
+        if(req.query.sortBy) {
+            sortObj = {[req.query.sortBy as string]: 1};
+        }
+
+        const task = await taskModel.find(queryObj)
+            .sort(sortObj)
+            .skip(skip)
+            .limit(limit);
+
+        const totalTasks = await taskModel.countDocuments(queryObj);
 
         return res.status(200).json({
             status: "success",
-            data: task
+            data: task,
+            pagination: {
+                totalTasks,
+                totalPage: Math.ceil(totalTasks / limit),
+                currentPage: page,
+            }
         });
     } catch (error) {
         next(error);
