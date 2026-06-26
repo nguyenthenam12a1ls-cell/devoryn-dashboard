@@ -2,19 +2,17 @@ import Sidebar from '../Sidebar/Sidebar';
 import Header from '../Header/Header';
 import './Layout.css';
 
-export default function Layout({ children, title, subtitle, pageClass }) {
+export default function Layout({ children, title, breadcrumbs }) {
   return (
-    <div className="app-shell">
-      {/* Ambient background orbs */}
-      <div className="ambient-orb orb-1" />
-      <div className="ambient-orb orb-2" />
-      <div className="ambient-orb orb-3" />
-
-      <div className="app-inner glass-card">
+    <div className="neo-layout">
+      <div className="mesh-background" />
+      <div className="floating-sidebar-wrap">
         <Sidebar />
-        <div className="main-area">
-          <Header title={title} subtitle={subtitle} />
-          <div className={`page-content page-enter ${pageClass || ''}`}>
+      </div>
+      <div className="floating-main-wrap">
+        <Header title={title} breadcrumbs={breadcrumbs} />
+        <div className="neo-content-scroll">
+          <div className="neo-content-inner">
             {children}
           </div>
         </div>
