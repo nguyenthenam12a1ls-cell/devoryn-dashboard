@@ -1,5 +1,4 @@
-import { Request, Response , NextFunction} from "express";
-import { userValidator, loginValidator } from "../validators/userValidator";
+import { Request, Response, NextFunction } from "express";
 import AppError from "../utils/AppError";
 import UserModel from "../models/User";
 import bcrypt from "bcrypt";
@@ -7,11 +6,6 @@ import jwt from "jsonwebtoken";
 
 const register = async (req: Request, res: Response) => {
     const { name, email, password } = req.body;
-    const user = userValidator.safeParse(req.body);
-
-    if (!user.success) {
-        throw new AppError(user.error.issues[0].message, 400);
-    }
 
     const existingUser = await UserModel.findOne({ email });
 
@@ -36,12 +30,6 @@ const register = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
-    const parsed = loginValidator.safeParse(req.body);
-
-    if (!parsed.success) {
-        throw new AppError(parsed.error.issues[0].message, 400);
-    }
-
     const user = await UserModel.findOne({ email });
 
     if (!user) {
@@ -86,15 +74,15 @@ const refresh = async (req: Request, res: Response, next: NextFunction) => {
         if (!token) {
             throw new AppError("Không tìm thấy token này", 401);
         }
-        
-        const isMatch = jwt.verify(token, process.env.JWT_REFRESH_SECRET as string) as {id: string};
+
+        const isMatch = jwt.verify(token, process.env.JWT_REFRESH_SECRET as string) as { id: string };
         const userId = await UserModel.findOne({ _id: isMatch.id, refreshToken: token });
 
-        if(!userId) {
+        if (!userId) {
             throw new AppError("Không tìm thấy người dùng này", 403);
         }
 
-        const newToken = jwt.sign({id: userId._id}, process.env.JWT_SECRET as string, {expiresIn: "15m"});
+        const newToken = jwt.sign({ id: userId._id }, process.env.JWT_SECRET as string, { expiresIn: "15m" });
 
         res.status(200).json({
             status: "success",
@@ -106,16 +94,16 @@ const refresh = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-const logout = async(req: Request, res: Response, next: NextFunction) => {
+const logout = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const token = req.cookies.refreshToken;
-        if(!token) {
+        if (!token) {
             throw new AppError("Không tìm thấy token này", 401);
         }
 
-        const user = await UserModel.findOne({refreshToken: token});
-    
-        await user?.updateOne({refreshToken: ""});
+        const user = await UserModel.findOne({ refreshToken: token });
+
+        await user?.updateOne({ refreshToken: "" });
 
         res.clearCookie("refreshToken", {
             httpOnly: true,
@@ -129,9 +117,9 @@ const logout = async(req: Request, res: Response, next: NextFunction) => {
         });
 
 
-    } catch(error) {
+    } catch (error) {
         next(error);
     }
 }
 
-export { register, login , refresh, logout};
+export { register, login, refresh, logout };
