@@ -3,68 +3,33 @@ import AppError from "../utils/AppError";
 import UserModel from "../models/User";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import userService from "../services/userService";
 
-const register = async (req: Request, res: Response) => {
-    const { name, email, password } = req.body;
+const register = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userObj = await userService.registerUser(req.body);
 
-    const existingUser = await UserModel.findOne({ email });
-
-    if (existingUser) {
-        throw new AppError('Email đã tồn tại', 400);
+        res.status(201).json({ status: 'success', data: { user: userObj } });
+    } catch (error) {
+        next(error);
     }
-
-    const hashPassword = await bcrypt.hash(password, 12);
-
-    const newUser = await UserModel.create({
-        name,
-        email,
-        password: hashPassword,
-    });
-
-    // Phân rã newUser, gán password vào biến tạm _, gom các trường còn lại vào userObj
-    const { password: _, ...userObj } = newUser.toObject();
-
-    res.status(201).json({ status: 'success', data: { user: userObj } });
-
 };
 
-const login = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-    const user = await UserModel.findOne({ email });
+const login = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { user, accessToken, refreshToken } = await userService.loginUser(req.body);
 
-    if (!user) {
-        throw new AppError("Người dùng không tồn tại", 401);
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "strict",
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 ngày
+        });
+
+        res.status(200).json({ status: 'success', token: accessToken, data: { user } });
+    } catch (error) {
+        next(error);
     }
-
-    const hashPassword = await bcrypt.compare(password, user.password);
-
-    if (!hashPassword) {
-        throw new AppError("Mật khẩu sai , xin vui lòng nhập lại", 401);
-    }
-
-    const isMatch = jwt.sign({ id: user._id }, process.env.JWT_SECRET as string, { expiresIn: '15m' });
-    const refreshMatch = jwt.sign({ id: user._id }, process.env.JWT_REFRESH_SECRET as string, { expiresIn: '7d' });
-
-    user.refreshToken = refreshMatch;
-
-    await user.save();
-
-    res.cookie("refreshToken", refreshMatch, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 ngày
-    });
-
-
-    // Phân rã user, bỏ password đi, gom phần còn lại vào userObj
-    const { password: _, ...userObj } = user.toObject();
-
-    res.status(200).json({
-        status: 'success',
-        token: isMatch,
-        data: { user: userObj } // Trả về userObj đã lọc mật khẩu
-    });
 };
 
 const refresh = async (req: Request, res: Response, next: NextFunction) => {
